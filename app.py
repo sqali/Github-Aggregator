@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/contributors', methods=['GET'])
 def get_contributors():
-    repo_name = request.args.get('repo_name') # get repository name from query parameter
+    repo_name = request.args.get('hashicorp') # get repository name from query parameter
     g = Github() # initialize PyGithub with your credentials or use anonymously
     repo = g.get_repo(repo_name)
     contributors = {}
@@ -41,10 +41,10 @@ def get_contributors():
     # Store sorted contributor information in MySQL database
     try:
         connection = mysql.connector.connect(
-            host='<your-host>',
-            user='<your-username>',
-            password='<your-password>',
-            database='<your-database>'
+            host='127.0.0.1',
+            user='Qaiser',
+            password='Sayedali@732',
+            database='github_aggregator'
         )
         cursor = connection.cursor()
 
