@@ -1,70 +1,56 @@
+from flask import Flask, jsonify
+import requests
+from collections import defaultdict
 import mysql.connector
-from github import Github
 
-# connect to MySQL database
-mydb = mysql.connector.connect(
-  host="127.0.0.1",
-  user="Qaiser",
-  password="Sayedali@732",
-  database="github_aggregator"
-)
+app = Flask(__name__)
 
-# create a cursor to execute SQL queries
-mycursor = mydb.cursor()
+# Define database connection parameters
+db_config = {
+    'user': 'Qaiser',
+    'password': 'Sayedali@732',
+    'host': '127.0.0.1',
+    'database': 'github_aggregator'
+}
 
-# create table to store the data
-mycursor.execute("CREATE TABLE IF NOT EXISTS contributions (id INT AUTO_INCREMENT PRIMARY KEY, company VARCHAR(255), contributions INT, contributors INT)")
+# Create database connection
+db_conn = mysql.connector.connect(**db_config)
+db_cursor = db_conn.cursor()
 
-# initialize GitHub API object
-g = Github()
 
-# get the repository object
-repo = g.get_repo("hashicorp/vault")
+@app.route('/contributors')
+def contributors():
+    repo_name = 'hashicorp/consul'
+    url = f"https://api.github.com/repos/{repo_name}/commits"
+    headers = {'Accept': 'application/vnd.github.v3+json'}
 
-# get all the branches in the repository
-branches = repo.get_branches()
+    # Send GET request to GitHub API to fetch all commits for the repository
+    response = requests.get(url, headers=headers)
+    data = response.json()
 
-# create an empty dictionary to store the results
-result = {}
+    # Initialize dictionary to store total contributions and unique contributors for each domain
+    domain_stats = defaultdict(lambda: {'total_contributions': 0, 'unique_contributors': set()})
 
-# iterate over each branch
-for branch in branches:
-    # get the commit object for the head of the branch
-    commit = repo.get_commit(sha=branch.commit.sha)
+    # Iterate over each commit and extract domain from email
+    for commit in data:
+        email = commit['commit']['author']['email']
+        domain = email.split('@')[-1]
+        domain_stats[domain]['total_contributions'] += 1
+        domain_stats[domain]['unique_contributors'].add(commit['commit']['author']['name'])
 
-    # get the list of contributors for the commit
-    contributors = commit.get_contributors()
+    # Convert defaultdict to regular dictionary and sort by total contributions
+    domain_stats = dict(sorted(domain_stats.items(), key=lambda x: x[1]['total_contributions'], reverse=True))
 
-    # iterate over each contributor and add to the dictionary
-    for contributor in contributors:
-        # get the company name from the contributor's profile
-        company = contributor.company
+    # Store data in MySQL database
+    for domain, stats in domain_stats.items():
+        total_contributions = stats['total_contributions']
+        unique_contributors = len(stats['unique_contributors'])
+        insert_query = f"INSERT INTO contributors (repo_name, domain, total_contributions, unique_contributors) VALUES ('{repo_name}', '{domain}', {total_contributions}, {unique_contributors})"
+        db_cursor.execute(insert_query)
+        db_conn.commit()
 
-        # if the company is not set, set it to "Unknown"
-        if not company:
-            company = "Unknown"
+    # Convert dictionary to JSON and return as response
+    return jsonify(domain_stats)
 
-        # if the company is already in the dictionary, add to the contributions and contributors count
-        if company in result:
-            result[company]["contributions"] += 1
-            if contributor.login not in result[company]["contributors"]:
-                result[company]["contributors"].append(contributor.login)
-        # if the company is not in the dictionary, create a new entry
-        else:
-            result[company] = {}
-            result[company]["contributions"] = 1
-            result[company]["contributors"] = [contributor.login]
-
-# iterate over the dictionary and insert data into the MySQL database
-for company in result:
-    contributions = result[company]["contributions"]
-    contributors = len(result[company]["contributors"])
-    sql = "INSERT INTO contributions (company, contributions, contributors) VALUES (%s, %s, %s)"
-    val = (company, contributions, contributors)
-    mycursor.execute(sql, val)
-
-# commit changes to the database
-mydb.commit()
-
-# close the database connection
-mydb.close()
+if __name__ == '__main__':
+    app.run(debug=True)
