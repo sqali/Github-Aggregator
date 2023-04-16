@@ -52,7 +52,7 @@ def contributors():
 
     # Convert dictionary to JSON and return as response
     for domain, stats in domain_stats.items():
-        stats['unique_contributors'] = list(stats['unique_contributors'])
+        stats['unique_contributors'] = len(list(stats['unique_contributors']))
 
     # Return JSON response
     return json.dumps(domain_stats)
