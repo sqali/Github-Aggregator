@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 import requests
+import json
 from collections import defaultdict
 import mysql.connector
 
@@ -50,7 +51,12 @@ def contributors():
         db_conn.commit()
 
     # Convert dictionary to JSON and return as response
-    return jsonify(domain_stats)
+    for domain, stats in domain_stats.items():
+        stats['unique_contributors'] = list(stats['unique_contributors'])
+
+    # Return JSON response
+    return json.dumps(domain_stats)
+    #return jsonify(domain_stats)
 
 if __name__ == '__main__':
     app.run(debug=True)
