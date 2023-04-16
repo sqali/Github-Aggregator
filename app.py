@@ -19,7 +19,7 @@ db_conn = mysql.connector.connect(**db_config)
 db_cursor = db_conn.cursor()
 
 
-@app.route('/contributors')
+@app.route('/')
 def contributors():
     repo_name = 'hashicorp/consul'
     url = f"https://api.github.com/repos/{repo_name}/commits"
