@@ -1,8 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response, Response
 import requests
 import json
 from collections import defaultdict
 import mysql.connector
+import csv
 
 app = Flask(__name__)
 
@@ -74,6 +75,34 @@ def contributors():
 
         # Return JSON response
         return json.dumps(domain_stats)
+    
+@app.route('/download_csv')
+def download_csv():
+    repo_name = 'hashicorp/consul'
+    select_query = f"SELECT domain, total_contributions, unique_contributors FROM contributors WHERE repo_name = '{repo_name}'"
+    db_cursor.execute(select_query)
+    db_results = db_cursor.fetchall()
+
+    # Prepare the CSV data
+    csv_data = []
+    csv_data.append(['Domain', 'Total Contributions', 'Unique Contributors'])
+    for row in db_results:
+        domain = row[0]
+        total_contributions = row[1]
+        unique_contributors = row[2]
+        csv_data.append([domain, total_contributions, unique_contributors])
+
+    # Create a response object with CSV data
+    csv_response = make_response('')
+    csv_response.headers['Content-Disposition'] = 'attachment; filename=result.csv'
+    csv_response.headers['Content-Type'] = 'text/csv'
+
+    # Write CSV data to the response
+    stream = csv_response.stream
+    writer = csv.writer(stream)
+    writer.writerows(csv_data)
+
+    return csv_response
 
 if __name__ == '__main__':
     app.run(debug=True)
