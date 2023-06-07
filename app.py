@@ -48,15 +48,32 @@ def contributors():
     result = db_cursor.fetchone()
     record_count = result[0]
 
-    # Insert the record if it doesn't exist
-    if record_count == 0:
-        insert_query = f"INSERT INTO contributors (repo_name, domain, total_contributions, unique_contributors) VALUES ('{repo_name}', '{domain}', {total_contributions}, {unique_contributors})"
-        db_cursor.execute(insert_query)
+    if record_count > 0:
+        # Data already exists in the database, retrieve and return the result
+        select_query = f"SELECT domain, total_contributions, unique_contributors FROM contributors WHERE repo_name = '{repo_name}'"
+        db_cursor.execute(select_query)
+        db_results = db_cursor.fetchall()
+
+        # Prepare result dictionary
+        result_dict = {}
+        for row in db_results:
+            domain = row[0]
+            total_contributions = row[1]
+            unique_contributors = row[2]
+            result_dict[domain] = {'total_contributions': total_contributions, 'unique_contributors': unique_contributors}
+
+        return json.dumps(result_dict)
+    else:
+        # Data doesn't exist in the database, store the data
+        for domain, stats in domain_stats.items():
+            total_contributions = stats['total_contributions']
+            unique_contributors = len(stats['unique_contributors'])
+            insert_query = f"INSERT INTO contributors (repo_name, domain, total_contributions, unique_contributors) VALUES ('{repo_name}', '{domain}', {total_contributions}, {unique_contributors})"
+            db_cursor.execute(insert_query)
         db_conn.commit()
-    # new line added to check git refreshing settings
-    # Return JSON response
-    return json.dumps(domain_stats)
-    #return jsonify(domain_stats)
+
+        # Return JSON response
+        return json.dumps(domain_stats)
 
 if __name__ == '__main__':
     app.run(debug=True)
