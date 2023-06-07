@@ -43,17 +43,17 @@ def contributors():
     domain_stats = dict(sorted(domain_stats.items(), key=lambda x: x[1]['total_contributions'], reverse=True))
 
     # Store data in MySQL database
-    for domain, stats in domain_stats.items():
-        total_contributions = stats['total_contributions']
-        unique_contributors = len(stats['unique_contributors'])
+    select_query = f"SELECT COUNT(*) FROM contributors WHERE repo_name = '{repo_name}' AND domain = '{domain}'"
+    db_cursor.execute(select_query)
+    result = db_cursor.fetchone()
+    record_count = result[0]
+
+    # Insert the record if it doesn't exist
+    if record_count == 0:
         insert_query = f"INSERT INTO contributors (repo_name, domain, total_contributions, unique_contributors) VALUES ('{repo_name}', '{domain}', {total_contributions}, {unique_contributors})"
         db_cursor.execute(insert_query)
         db_conn.commit()
-
-    # Convert dictionary to JSON and return as response
-    for domain, stats in domain_stats.items():
-        stats['unique_contributors'] = len(list(stats['unique_contributors']))
-
+    # new line added to check git refreshing settings
     # Return JSON response
     return json.dumps(domain_stats)
     #return jsonify(domain_stats)
