@@ -22,7 +22,7 @@ db_cursor = db_conn.cursor()
 
 @app.route('/')
 def contributors():
-    repo_name = 'hashicorp/consul'
+    repo_name = 'apache/spark'
     url = f"https://api.github.com/repos/{repo_name}/commits"
     headers = {'Accept': 'application/vnd.github.v3+json'}
 
