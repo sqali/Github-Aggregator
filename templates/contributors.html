@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>Contributors</title>
+</head>
+<body>
+    <h1>Contributors</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Total Contributions</th>
+                <th>Unique Contributors</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for domain, stats in domain_stats.items() %}
+            <tr>
+                <td>{{ domain }}</td>
+                <td>{{ stats.total_contributions }}</td>
+                <td>{{ stats.unique_contributors }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

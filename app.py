@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, Response
+from flask import Flask, jsonify, make_response, Response, render_template
 import requests
 import json
 from collections import defaultdict
@@ -63,7 +63,7 @@ def contributors():
             unique_contributors = row[2]
             result_dict[domain] = {'total_contributions': total_contributions, 'unique_contributors': unique_contributors}
 
-        return json.dumps(result_dict)
+        return render_template("contributors.html", domain_stats=result_dict)
     else:
         # Data doesn't exist in the database, store the data
         for domain, stats in domain_stats.items():
@@ -74,7 +74,7 @@ def contributors():
         db_conn.commit()
 
         # Return JSON response
-        return json.dumps(domain_stats)
+        return render_template('contributors.html', domain_stats=domain_stats)
     
 @app.route('/download_csv')
 def download_csv():
