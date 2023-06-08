@@ -3,10 +3,9 @@
 ## Features to be introduced
 
 - [x] Introduce dark border around the result table
-- [x] Amend the title such that the Repository name is visible in it
 - [ ] Button Feature to download the CSV file of the results
 - [ ] Take the repository name as input from the user, in case the repository does not exist return the relevant reponse
-
+- [x] Amend the title such that the Repository name is visible in it
 
 ## Bugs to fix
 
