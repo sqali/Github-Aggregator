@@ -1,7 +1,12 @@
 # Github-Aggregator
 
-## New features to be introduced
+## Features to be introduced
 
-* CSV or excel File to download the results of the input provided
-* Website design improvement
-* Data Redundancy issue upon the the web application
+* Button Feature to download the CSV file of the results
+* Introduce dark border around the result table
+* Take the repository name as input from the user, in case the repository does not exist return the relevant reponse
+
+## Bugs to fix
+
+* Total Number of contributions comes out as 30 irrespective of the repository
+* Condition to check if the data exists or not in the database needs to be thoroughly checked as it maybe preventing other data from being inserted into it
