@@ -4,6 +4,7 @@ import json
 from collections import defaultdict
 import mysql.connector
 import csv
+import re
 
 app = Flask(__name__)
 
@@ -63,7 +64,9 @@ def contributors():
             unique_contributors = row[2]
             result_dict[domain] = {'total_contributions': total_contributions, 'unique_contributors': unique_contributors}
 
-        return render_template("contributors.html", domain_stats=result_dict)
+        repository = re.match(r"([^/]*)", repo_name).group(1).capitalize()
+        return render_template("contributors.html", repository= repository, domain_stats=result_dict)
+    
     else:
         # Data doesn't exist in the database, store the data
         for domain, stats in domain_stats.items():
@@ -74,7 +77,9 @@ def contributors():
         db_conn.commit()
 
         # Return JSON response
-        return render_template('contributors.html', domain_stats=domain_stats)
+        repository = re.match(r"([^/]*)", repo_name).group(1).capitalize()
+        return render_template("contributors.html", repository= repository, domain_stats=result_dict)
+
     
 @app.route('/download_csv')
 def download_csv():
