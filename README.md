@@ -10,3 +10,7 @@
 
 * Total Number of contributions comes out as 30 irrespective of the repository
 * Condition to check if the data exists or not in the database needs to be thoroughly checked as it maybe preventing other data from being inserted into it
+
+## Security issues
+
+* Mask the passwords present in the files
