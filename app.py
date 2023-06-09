@@ -23,12 +23,16 @@ db_cursor = db_conn.cursor()
 
 @app.route('/')
 def contributors():
-    repo_name = 'apache/spark'
+    repo_name = "openai/gym"
     url = f"https://api.github.com/repos/{repo_name}/commits"
     headers = {'Accept': 'application/vnd.github.v3+json'}
 
     # Send GET request to GitHub API to fetch all commits for the repository
     response = requests.get(url, headers=headers)
+
+    if response.status_code == 404:
+        return render_template("not_found.html")
+
     data = response.json()
 
     # Initialize dictionary to store total contributions and unique contributors for each domain
