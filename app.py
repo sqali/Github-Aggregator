@@ -5,13 +5,19 @@ from collections import defaultdict
 import mysql.connector
 import csv
 import re
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+db_password = os.getenv('DB_PASSWORD')
 
 app = Flask(__name__)
+
 
 # Define database connection parameters
 db_config = {
     'user': 'Qaiser',
-    'password': 'Sayedali@732',
+    'password': db_password,
     'host': '127.0.0.1',
     'database': 'github_aggregator'
 }
