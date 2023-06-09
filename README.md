@@ -16,4 +16,4 @@
 
 ## Security issues
 
-- [ ] Mask the passwords present in the files using environmental variables
+- [x] Mask the passwords present in the files using environmental variables
