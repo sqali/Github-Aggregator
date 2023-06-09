@@ -4,7 +4,8 @@
 
 - [x] Introduce dark border around the result table
 - [x] Button Feature to download the CSV file of the results
-- [ ] Take the repository name as input from the user
+- [ ] Create the HTML page for the user to enter the name of the repository
+- [ ] Take the user provided input and do the checks related to the repository, return the response accordingly
 - [x] Amend the title such that the Repository name is visible in it
 - [x] Return the relevant response if the repository does not exist
 
