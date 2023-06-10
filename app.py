@@ -10,6 +10,7 @@ import os
 load_dotenv()
 
 db_password = os.getenv('DB_PASSWORD')
+github_token = os.getenv("TOKEN")
 
 app = Flask(__name__)
 
@@ -31,7 +32,7 @@ db_cursor = db_conn.cursor()
 def contributors():
     repo_name = "huggingface/datasets"
     url = f"https://api.github.com/repos/{repo_name}/commits"
-    headers = {'Accept': 'application/vnd.github.v3+json'}
+    headers = {'Accept': 'application/vnd.github.v3+json', 'Authorization': f'Bearer {github_token}'}
 
     # Send GET request to GitHub API to fetch all commits for the repository
     response = requests.get(url, headers=headers)

@@ -4,6 +4,7 @@
 
 - [x] Introduce dark border around the result table
 - [x] Button Feature to download the CSV file of the results
+- [x] Use github api token for github authentication process
 - [ ] Create the HTML page for the user to enter the name of the repository
 - [ ] Take the user provided input and do the checks related to the repository, return the response accordingly
 - [ ] Make the changes to the python code such that repository name is passed down to the donwload csv function and it returns the table result according to the repository name given as input
