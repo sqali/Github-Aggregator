@@ -74,7 +74,7 @@ def contributors():
             unique_contributors = row[2]
             result_dict[domain] = {'total_contributions': total_contributions, 'unique_contributors': unique_contributors}
 
-        repository = re.match(r"([^/]*)", repo_name).group(1).capitalize()
+        repository = re.match(r"([^/]*)", repo_name).group(1)
         return render_template("contributors.html", repository= repository, domain_stats=result_dict)
     
     else:
@@ -87,8 +87,8 @@ def contributors():
         db_conn.commit()
 
         # Return JSON response
-        repository = re.match(r"([^/]*)", repo_name).group(1).capitalize()
-        return render_template("contributors.html", repository= repository, domain_stats=result_dict)
+        repository = re.match(r"([^/]*)", repo_name).group(1)
+        return render_template("contributors.html", repository= repository, domain_stats=domain_stats)
 
     
 @app.route('/download_csv')
