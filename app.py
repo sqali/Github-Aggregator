@@ -29,7 +29,7 @@ db_cursor = db_conn.cursor()
 
 @app.route('/')
 def contributors():
-    repo_name = "openai/gym"
+    repo_name = "huggingface/datasets"
     url = f"https://api.github.com/repos/{repo_name}/commits"
     headers = {'Accept': 'application/vnd.github.v3+json'}
 
