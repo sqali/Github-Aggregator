@@ -27,3 +27,4 @@
 ## Challenges Faced
 
 * Latency issues when querying data from the MySQL database
+* API rate limit per hour exceeding for repositories that have high number of commits
