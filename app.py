@@ -28,6 +28,16 @@ db_conn = mysql.connector.connect(**db_config)
 db_cursor = db_conn.cursor()
 
 
+def get_next_page(links):
+    # Extracts the URL for the next page from the "Link" header
+    parts = links.split(',')
+    for part in parts:
+        section = part.split(';')
+        if 'rel="next"' in section[1]:
+            return section[0].strip()[1:-1]  # Remove '<' and '>' from the URL
+    return None
+
+
 @app.route('/')
 def contributors():
     repo_name = "huggingface/datasets"
@@ -51,6 +61,23 @@ def contributors():
         domain = email.split('@')[-1]
         domain_stats[domain]['total_contributions'] += 1
         domain_stats[domain]['unique_contributors'].add(commit['commit']['author']['name'])
+
+    if 'Link' in response.headers:
+        links = response.headers['Link']
+        next_page = get_next_page(links)
+        while next_page:
+            response = requests.get(next_page, headers=headers)
+            data = response.json()
+            for commit in data:
+                email = commit['commit']['author']['email']
+                domain = email.split('@')[-1]
+                domain_stats[domain]['total_contributions'] += 1
+                domain_stats[domain]['unique_contributors'].add(commit['commit']['author']['name'])
+            if 'Link' in response.headers:
+                links = response.headers['Link']
+                next_page = get_next_page(links)
+            else:
+                break
 
     # Convert defaultdict to regular dictionary and sort by total contributions
     domain_stats = dict(sorted(domain_stats.items(), key=lambda x: x[1]['total_contributions'], reverse=True))
