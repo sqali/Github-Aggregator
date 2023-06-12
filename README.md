@@ -5,8 +5,7 @@
 - [x] Introduce dark border around the result table
 - [x] Button Feature to download the CSV file of the results
 - [x] Use github api token for github authentication process
-- [ ] Create the HTML page for the user to enter the name of the repository
-- [ ] Take the user provided input and do the checks related to the repository, return the response accordingly
+- [ ] Proper implementation of Input, output, GET, POST method so that client can input the repository name
 - [x] Amend the title such that the Repository name is visible in it
 - [x] Return the relevant response if the repository does not exist
 
