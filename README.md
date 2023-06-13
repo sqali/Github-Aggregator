@@ -13,7 +13,7 @@
 
 - [x] View the number of unique contributors in case the data does not exist in the MySQL database
 - [x] Total Number of contributions comes out as 30 irrespective of the repository
-- [ ] Pass the repo name to download csv function such that it returns the table result accordingly
+- [x] Pass the repo name to download csv function such that it returns the table result accordingly
 
 ## Time Complexity
 

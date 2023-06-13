@@ -26,7 +26,7 @@ db_config = {
 # Create database connection
 db_conn = mysql.connector.connect(**db_config)
 db_cursor = db_conn.cursor()
-
+repo_name = "scipy/scipy-cookbook"
 
 def get_next_page(links):
     # Extracts the URL for the next page from the "Link" header
@@ -40,7 +40,6 @@ def get_next_page(links):
 
 @app.route('/')
 def contributors():
-    repo_name = "huggingface/datasets"
     url = f"https://api.github.com/repos/{repo_name}/commits"
     headers = {'Accept': 'application/vnd.github.v3+json', 'Authorization': f'Bearer {github_token}'}
 
@@ -121,7 +120,6 @@ def contributors():
     
 @app.route('/download_csv')
 def download_csv():
-    repo_name = 'hashicorp/consul'
     select_query = f"SELECT domain, total_contributions, unique_contributors FROM contributors WHERE repo_name = '{repo_name}'"
     db_cursor.execute(select_query)
     db_results = db_cursor.fetchall()
