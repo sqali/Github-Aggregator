@@ -23,6 +23,10 @@
 
 - [x] Mask the sensitive info (passwords, token keys) present in the files using environmental variables
 
+## Testing
+
+- [ ] Test the Flask application using unittest or pytest
+
 ## Challenges Faced
 
 * Latency issues when querying data from the MySQL database
