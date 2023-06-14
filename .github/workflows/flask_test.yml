@@ -17,8 +17,8 @@ jobs:
                 python-version: [3.11]
 
         env:
-            DB_PASSWORD: "Sayedali@732"
-            TOKEN: "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"
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            TOKEN: ${{ secrets.TOKEN }}
 
         steps:
             - uses: actions/checkout@v3
