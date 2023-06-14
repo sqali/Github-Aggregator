@@ -61,6 +61,7 @@ def contributors():
         domain_stats[domain]['total_contributions'] += 1
         domain_stats[domain]['unique_contributors'].add(commit['commit']['author']['name'])
 
+    # Iterating over all the pages of commits
     if 'Link' in response.headers:
         links = response.headers['Link']
         next_page = get_next_page(links)
