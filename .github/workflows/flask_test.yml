@@ -11,7 +11,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: dev
     defaults:
       run:
         working-directory: .
@@ -36,16 +35,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Build Docker image
-        run: |
-          docker build -t qaiser45/qaiser-images:Flask-Github-Aggregator .
         
       - name: Log in to Docker
         uses: docker/login-action@v1
         with:
           username: ${{ env.dev.DOCKERHUB_USERNAME }}
           password: ${{ env.dev.DOCKERHUB_TOKEN }}
+          
+      - name: Build Docker image
+        run: |
+          docker build -t qaiser45/qaiser-images:Flask-Github-Aggregator .
         
       - name: Push Docker image
         run: |
