@@ -1,5 +1,7 @@
 # Github-Aggregator
 
+[![Flask application testing Workflow](https://github.com/sqali/Github-Aggregator/actions/workflows/flask_test.yml/badge.svg)](https://github.com/sqali/Github-Aggregator/actions/workflows/flask_test.yml)
+
 ## Description
 
 GitHub Aggregator is a web application built with Flask that collects commit data from a specific GitHub repository and provides insights about the contributors based on their email domains. It helps you understand the distribution of contributions across different domains and the unique contributors involved in a repository.
